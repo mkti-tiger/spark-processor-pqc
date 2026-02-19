@@ -1,1 +1,166 @@
 
+(未動作テスト)
+
+ご提案いただいた内容は、Docker環境の利用料を課金する仕組みを導入し、量子証明付きのトランザクション（TX）と一緒にAggregate Transactionとして送信するものです。
+具体的には、コードの先頭に任意の利用料金額（microXYM単位）と送金先アドレスを変数として設定し、Aggregate内の先頭内包TXを利用料送金として扱います。
+これにより、API経由でノードから呼び出された際に、利用料を自動的に含めた形でトランザクションを実行可能です。
+この修正は、Symbol SDKの機能を利用して実現可能です。以下に、更新されたindex.jsコードを示します。変更点は以下の通りです：
+
+コード先頭に環境変数DOCKER_USAGE_FEE（任意の利用料金額、microXYM単位）とDOCKER_FEE_RECIPIENT（送金先アドレス）を追加。
+Aggregate Transactionの内包TXリストの先頭に、利用料送金のTransferTransactionを挿入。
+これにより、元の量子証明TXと利用料送金が原子的に実行されます。
+
+更新されたコード（index.js）
+JavaScriptconst { ml_dsa65 } = require('@noble/post-quantum/ml-dsa.js');
+const { randomBytes } = require('@noble/post-quantum/utils.js');
+const sha3_256 = require('js-sha3').sha3_256;
+const symbolSdk = require('symbol-sdk');
+
+// 環境変数（任意の利用料と送金先アドレスを設定）
+const dockerUsageFee = process.env.DOCKER_USAGE_FEE ? symbolSdk.UInt64.fromUint(Number(process.env.DOCKER_USAGE_FEE)) : symbolSdk.UInt64.fromUint(1000000);  // デフォルト1 XYM (microXYM単位)
+const dockerFeeRecipient = process.env.DOCKER_FEE_RECIPIENT ? symbolSdk.Address.createFromRawAddress(process.env.DOCKER_FEE_RECIPIENT) : symbolSdk.Address.createFromRawAddress('NAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');  // デフォルトのダミーアドレス（実際のアドレスに置き換え）
+
+// その他の環境変数
+const restUrl = process.env.REST_URL;
+const networkType = symbolSdk.NetworkType.TEST_NET;
+const networkIdentifier = process.env.NETWORK_IDENTIFIER;
+const signerPrivateKey = process.env.SIGNER_PRIVATE_KEY;  // Faucetで資金入手した鍵
+const customMaxFee = process.env.CUSTOM_MAX_FEE ? symbolSdk.UInt64.fromUint(Number(process.env.CUSTOM_MAX_FEE)) : null;  // 任意maxFee (microXYM)
+
+// ステップ1: データ → SHA3-256ハッシュ（バッファ形式）
+const data = ['Symbol PQC Anchor Test Data 1', 'Symbol PQC Anchor Test Data 2'];
+const leaves = data.map(d => Buffer.from(sha3_256.arrayBuffer(d)));
+
+// ステップ2: Merkle Root生成（バイトレベル）
+function computeMerkleRoot(leaves) {
+  if (leaves.length === 1) return leaves[0].toString('hex');
+  const parents = [];
+  for (let i = 0; i < leaves.length; i += 2) {
+    const left = leaves[i];
+    const right = i + 1 < leaves.length ? leaves[i + 1] : left;
+    const combined = Buffer.concat([left, right]);
+    parents.push(Buffer.from(sha3_256.arrayBuffer(combined)));
+  }
+  return computeMerkleRoot(parents);
+}
+const merkleRoot = computeMerkleRoot(leaves);
+
+// ステップ3: ML-DSA-65署名（サイズ: 公開鍵1952B、署名3309B）
+const payloadBuffer = Buffer.from(sha3_256.arrayBuffer(merkleRoot + networkIdentifier));
+const seed = randomBytes(32);
+const keys = ml_dsa65.keygen(seed);
+const signature = ml_dsa65.sign(payloadBuffer, keys.secretKey);
+
+// ステップ4: バイナリ分割
+const maxMessageSize = 1023;  // RawMessage制限
+const jsonHeader = JSON.stringify({
+  purpose: 'symbol-pqc-anchor',
+  version: '1.0',
+  hashAlgo: 'SHA3-256',
+  merkleRoot: merkleRoot
+});
+const publicKeyBuffer = keys.publicKey;  // 1952B
+const signatureBuffer = signature;  // 3309B
+
+// 分割関数
+function splitBuffer(buffer, maxSize) {
+  const parts = [];
+  for (let i = 0; i < buffer.length; i += maxSize) {
+    parts.push(buffer.slice(i, i + maxSize));
+  }
+  return parts;
+}
+const publicKeyParts = splitBuffer(publicKeyBuffer, maxMessageSize);  // 2 parts
+const signatureParts = splitBuffer(signatureBuffer, maxMessageSize);  // 4 parts
+
+// SDKセットアップ
+const repositoryFactory = new symbolSdk.RepositoryFactoryHttp(restUrl);
+const transactionHttp = repositoryFactory.createTransactionRepository();
+const signerAccount = symbolSdk.Account.createFromPrivateKey(signerPrivateKey, networkType);
+
+// メイン関数（非同期）
+async function main() {
+  try {
+    const generationHash = await repositoryFactory.getGenerationHash().toPromise();
+    const epochAdjustment = await repositoryFactory.getEpochAdjustment().toPromise();
+
+    // 内包Transfer作成（先頭に利用料送金 + ヘッダー + 公開鍵分割 + 署名分割）
+    const innerTxs = [];
+
+    // 先頭: Docker利用料送金（XYM送金）
+    innerTxs.push(
+      symbolSdk.TransferTransaction.create(
+        symbolSdk.Deadline.create(epochAdjustment),
+        dockerFeeRecipient,
+        [new symbolSdk.SymbolMosaic(symbolSdk.NetworkCurrencies.PUBLIC.currency.mosaicId, dockerUsageFee)],
+        symbolSdk.PlainMessage.create('Docker Usage Fee'),
+        networkType
+      ).toAggregate(signerAccount.publicAccount)
+    );
+
+    // ヘッダー
+    innerTxs.push(
+      symbolSdk.TransferTransaction.create(
+        symbolSdk.Deadline.create(epochAdjustment),
+        signerAccount.address,
+        [],
+        symbolSdk.PlainMessage.create(jsonHeader),
+        networkType
+      ).toAggregate(signerAccount.publicAccount)
+    );
+
+    // 公開鍵分割
+    publicKeyParts.forEach(part => {
+      innerTxs.push(
+        symbolSdk.TransferTransaction.create(
+          symbolSdk.Deadline.create(epochAdjustment),
+          signerAccount.address,
+          [],
+          symbolSdk.RawMessage.create(part),
+          networkType
+        ).toAggregate(signerAccount.publicAccount)
+      );
+    });
+
+    // 署名分割
+    signatureParts.forEach(part => {
+      innerTxs.push(
+        symbolSdk.TransferTransaction.create(
+          symbolSdk.Deadline.create(epochAdjustment),
+          signerAccount.address,
+          [],
+          symbolSdk.RawMessage.create(part),
+          networkType
+        ).toAggregate(signerAccount.publicAccount)
+      );
+    });
+
+    // Aggregate Transaction
+    const aggregateTx = symbolSdk.AggregateTransaction.createComplete(
+      symbolSdk.Deadline.create(epochAdjustment),
+      innerTxs,
+      networkType,
+      [],
+      customMaxFee || symbolSdk.UInt64.fromUint(2000000)  // 任意maxFeeまたはデフォルト
+    );
+
+    aggregateTx.setMaxFeeForAggregate(100, innerTxs.length);  // 動的手数料調整（任意maxFeeが優先）
+
+    console.log("Aggregate Size:", aggregateTx.size);  // サイズ実測出力
+
+    // 署名と発表
+    const signedTx = signerAccount.sign(aggregateTx, generationHash);
+    await transactionHttp.announce(signedTx).toPromise();
+    console.log('Transaction Hash:', signedTx.hash);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+main();
+使用方法と注意点
+
+docker-compose.ymlへの追加: 環境変数として- DOCKER_USAGE_FEE=1000000（例: 1 XYM）と- DOCKER_FEE_RECIPIENT=TBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAを追加してください。これで利用料と送金先を任意に設定できます。
+API統合: ノードからのAPI呼び出し時には、このコードをエンドポイントとして実行し、利用料を含めたAggregate Transactionを生成・送信します。元の量子証明TXは後続の内包として自動的に追加されます。
+制限事項: 利用料はXYMとして送金されますが、手数料自体（effectiveFee）はプロトコルで計算されます。超過分は返金されるため、正確な課金制御には追加のメカニズム（例: オフチェーン決済）を検討してください。
+検証推奨: Testnetで動作を確認した上でMainnetに移行してください。サイズや手数料の変動を考慮し、必要に応じて調整をお願いいたします。
