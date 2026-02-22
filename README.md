@@ -160,9 +160,9 @@ L1本体をいじらないから、美しい。
   
 
 
-<img width="788" height="925" alt="image" src="https://github.com/user-attachments/assets/ed2dc972-7f28-466b-ae81-0b22daeabf9b" />
 
 　
+<img width="808" height="1158" alt="ETH Node 内部処理図（PQC全処理をDocker Pluginに完全委託した最新版）スクリーンショット 2026-02-22 093255" src="https://github.com/user-attachments/assets/bad6e495-d298-47d2-9a52-b1fc4bb6b6da" />
 
 
   
