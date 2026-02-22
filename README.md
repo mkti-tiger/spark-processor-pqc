@@ -68,11 +68,14 @@ In conclusion, this proposal represents a pragmatic and innovative extension for
 
 <img width="1654" height="2339" alt="image" src="https://github.com/user-attachments/assets/4c9d2eab-e0c4-4efc-8c3d-ad732367486c" />
 
-
-
-
+　
+　
+　
 β1.0.0(VPN→E2E変更版)
 
+
+
+   
 脆弱は、AI検証後クリア可能確認（完了）
 セキュリティーの話はここでは控えます。
 
@@ -82,22 +85,31 @@ In conclusion, this proposal represents a pragmatic and innovative extension for
 L1本体をいじらないから、美しい。
 セキュリティ・信頼性・運用効率・規制対応のすべてを同時に高める戦略的優位性です。
 
+
+  
 <img width="782" height="768" alt="image" src="https://github.com/user-attachments/assets/08d79561-2a2c-4a00-b8df-a11b67b84580" />
+　
 
-
+ 
 
 <img width="777" height="886" alt="image" src="https://github.com/user-attachments/assets/5a17658b-8093-4a33-9be8-9c37d613a09d" />
 
+
+  
 
 
 <img width="787" height="927" alt="image" src="https://github.com/user-attachments/assets/3c08cc31-62aa-4766-b37a-3fb0e58d906f" />
 
 
+  
+
 
 <img width="788" height="925" alt="image" src="https://github.com/user-attachments/assets/ed2dc972-7f28-466b-ae81-0b22daeabf9b" />
 
+　
 
 
+  
 ETHに続いてBTC版も
 
 BTCの量子耐性暗号化（PQC）を
@@ -106,31 +118,44 @@ SYMBOL用モジュールが請け負います。
 図をご覧下さい。
 
 
+ 
 <img width="780" height="967" alt="image" src="https://github.com/user-attachments/assets/5d5e6b75-81af-482a-a759-e4e850ffee23" />
 
 
 
+
+  
 <img width="777" height="1174" alt="image" src="https://github.com/user-attachments/assets/c8ccb023-ba2d-4d40-8a9d-02dd0a7270ed" />
 
 
 
 
+  
+
 
 JPYC版です。
 
+
+  
 JPYC署名を量子耐性化いたします。
 
 以下の図をご覧下さい。
 
 
+  
+
 <img width="792" height="1038" alt="image" src="https://github.com/user-attachments/assets/06b2d83b-1568-4bd2-ac26-5b6a18804b39" />
 
 
+
+  
 
 <img width="726" height="540" alt="image" src="https://github.com/user-attachments/assets/d2f24214-2760-45b1-b161-d7f72edfac36" />
 
 
 
+
+  
 
 
 
