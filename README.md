@@ -11,6 +11,11 @@
 
 ・SYMBOL 量子耐性化後のシナリオA
  https://x.com/mkti_tiger/status/2023697039708877033
+
+・VPN→E2E 変更後のアーキテクチャ図(BTC-ETH-JPYC-OQC請負人仕様を追加)
+https://x.com/mkti_tiger/status/2025366526845747687
+
+
  
  
  Symbolプラグインモジュールによる量子耐性アンカー構造（DEMO Site）: http://sun.s66.xrea.com/Symbol-OS/pqc/
@@ -62,6 +67,27 @@ In conclusion, this proposal represents a pragmatic and innovative extension for
 <img width="1654" height="2339" alt="image" src="https://github.com/user-attachments/assets/f8809986-bacf-40d8-9806-6c68e5332182" />
 
 <img width="1654" height="2339" alt="image" src="https://github.com/user-attachments/assets/4c9d2eab-e0c4-4efc-8c3d-ad732367486c" />
+
+<img width="782" height="768" alt="image" src="https://github.com/user-attachments/assets/08d79561-2a2c-4a00-b8df-a11b67b84580" />
+
+<img width="777" height="886" alt="image" src="https://github.com/user-attachments/assets/5a17658b-8093-4a33-9be8-9c37d613a09d" />
+
+<img width="787" height="927" alt="image" src="https://github.com/user-attachments/assets/3c08cc31-62aa-4766-b37a-3fb0e58d906f" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 日本語でこのスレッドは、Symbolブロックチェーンをポスト量子暗号（PQC）対応に強化するための包括的な提案を概説しています。このアプローチは、Dockerベースのプラグインアーキテクチャを通じて量子耐性署名を導入し、量子時代における真正性の保存を実現することを目的としています。以下では、提案の主要要素、技術的実現可能性、潜在的な利点、および実装に関する考慮事項を構造的に分析します。
