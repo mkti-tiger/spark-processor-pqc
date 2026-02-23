@@ -92,7 +92,7 @@ Spark Processor（β）の最大の特徴は、**クライアントに一切秘�
 | 証明重視（遅延許容） | 1000件 or 1日（オリジナル）   | 最大1日       | 証拠保全、監査用途             |
 
 ### 調整方法（Docker起動時）
-```bash
+
 docker run -d \
   -e PQC_AGGREGATION_THRESHOLD=100 \    # 件数
   -e PQC_AGGREGATION_TIMEOUT=600 \      # 秒（10分）
@@ -117,6 +117,7 @@ CC0です。
 
 **図1 全体フロー（概念）**  
 
+<img width="1654" height="2339" alt="HBPRy7VbIAAOB7J" src="https://github.com/user-attachments/assets/8722727b-69a2-47ec-8713-96002e7a1831" />
 
 **チェーン記録証明**  
 Transaction Hash: `88E8FB3CC460C49A6681064D6D4519B88B21E32E6BF00E9CC5C5DE8341AD0932`  
@@ -137,15 +138,10 @@ http://sun.s66.xrea.com/Symbol-OS/pqc/
 
 ---
 
-## 🔍 詳細技術分析
-
-
-
-＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊＊
 
 ## 🔍 詳細技術分析
 
-<img width="1654" height="2339" alt="HBPRy7VbIAAOB7J" src="https://github.com/user-attachments/assets/8722727b-69a2-47ec-8713-96002e7a1831" />
+
 
 <img width="1654" height="2339" alt="image" src="https://github.com/user-attachments/assets/6357da43-8c4e-4400-b069-57237154da79" />
 
