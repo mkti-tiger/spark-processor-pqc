@@ -93,12 +93,13 @@ Spark Processor（β）の最大の特徴は、**クライアントに一切秘�
 
 ### 調整方法（Docker起動時）
 
+```bash
 docker run -d \
   -e PQC_AGGREGATION_THRESHOLD=100 \    # 件数
   -e PQC_AGGREGATION_TIMEOUT=600 \      # 秒（10分）
   -e PQC_IMMEDIATE_MODE=true \          # 高優先決済は即時署名
   mkti-tiger/spark-processor-pqc
-
+```
 
 
 ---
