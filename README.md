@@ -148,7 +148,6 @@ Bashdocker logs -f spark-pqc
 β2.0.0（　　　　）　本番運用向け監査ログ・メトリクス機能追加
 v1.0.0（　　　　）　正式リリース（Symbolメインネット推奨運用ガイド提供）
 
-
 📄 License & Status
 
 License：CC0（パブリックドメイン） - 自由に検証・実装・改変可能です
