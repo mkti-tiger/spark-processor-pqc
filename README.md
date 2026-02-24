@@ -104,6 +104,8 @@ Spark Processor（β）の最大の特徴は、**クライアントに一切秘�
 
 しかし、**決済用途（小額・高頻度取引）** では即時性がより重要になるため、**Docker環境変数で自由に調整可能**です。
 
+さらに、**クライアント側から個別に「即時処理リクエスト」** を送信できるオプションを追加予定です。
+
 ### 用途別推奨設定例
 
 | 用途                 | 推奨設定例                     | 最大遅延       | 想定シーン                     |
@@ -113,13 +115,21 @@ Spark Processor（β）の最大の特徴は、**クライアントに一切秘�
 | 即時決済（小額）     | 10件 or 60秒                  | 最大1分       | リアルタイム決済、マイクロペイメント |
 | 証明重視（遅延許容） | 1000件 or 1日（オリジナル）   | 最大1日       | 証拠保全、監査用途             |
 
-### 調整方法（Docker起動時）
+### クライアント主導即時処理オプション（β1.1.0予定）
+
+- クライアントはAPI経由で**「IMMEDIATE=true」フラグ**を付けて生データを送信可能  
+- プラグインは即座に単独でMerkle Rootを作成し、PQC署名・Symbolアンカーを行います  
+- **手数料プレミアム**（例：通常の2〜5倍）を課金することで、運用者のインセンティブを確保  
+- これにより「自分のハッシュだけを今すぐ量子耐性証明したい」というニーズに柔軟に対応
+
+**調整方法（Docker起動時）**
 
 ```bash
 docker run -d \
-  -e PQC_AGGREGATION_THRESHOLD=100 \    # 件数
-  -e PQC_AGGREGATION_TIMEOUT=600 \      # 秒（10分）
-  -e PQC_IMMEDIATE_MODE=true \          # 高優先決済は即時署名
+  -e PQC_AGGREGATION_THRESHOLD=100 \
+  -e PQC_AGGREGATION_TIMEOUT=600 \
+  -e PQC_IMMEDIATE_MODE=true \          # クライアントからの即時リクエストを許可
+  -e PQC_IMMEDIATE_FEE_MULTIPLIER=3 \   # 即時手数料を通常の3倍に設定
   mkti-tiger/spark-processor-pqc
 ```
 
