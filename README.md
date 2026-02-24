@@ -125,6 +125,7 @@ docker run -d \
 🚀 クイックスタート
 1. Dockerイメージの取得
 Bashdocker pull ghcr.io/mkti-tiger/spark-processor-pqc:latest
+
 2. コンテナ起動例（銀行用途）
 Bashdocker run -d \
   --name spark-pqc \
@@ -132,6 +133,7 @@ Bashdocker run -d \
   -e PQC_AGGREGATION_TIMEOUT=3600 \
   -e PQC_IMMEDIATE_MODE=false \
   ghcr.io/mkti-tiger/spark-processor-pqc:latest
+
 3. ログ確認
 Bashdocker logs -f spark-pqc
 
@@ -139,17 +141,26 @@ Bashdocker logs -f spark-pqc
 📋 動作要件
 
 項目,必要条件
-Docker,20.10以上（推奨：24.0以上）
+
+Docker
+
 OS,Linux / Windows / macOS
-Symbol Node,バージョン 1.0.0 以降
+
+Symbol Node
+
 インターネット接続,常時接続（Symbolノードと通信）
+
 
 🔮 ロードマップ
 
 β1.0.0（現在　　）　概念検証・仕様公開・Dockerブラックボックス完成
+
 β1.1.0（　　　　）　HSM連携・複数アルゴリズム自動切替
+
 β2.0.0（　　　　）　本番運用向け監査ログ・メトリクス機能追加
+
 v1.0.0（　　　　）　正式リリース（Symbolメインネット推奨運用ガイド提供）
+
 
 📄 License & Status
 
