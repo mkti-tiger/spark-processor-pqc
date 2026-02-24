@@ -138,8 +138,11 @@ Bashdocker logs -f spark-pqc
 
 📋 動作要件
 
-
-項目必要条件Docker20.10以上（推奨：24.0以上）OSLinux / Windows / macOSCPU / RAM2コア / 2GB以上（推奨：4コア / 4GB）Symbol Nodeバージョン 1.0.0 以降インターネット接続常時接続（Symbolノードと通信）
+項目,必要条件
+Docker,20.10以上（推奨：24.0以上）
+OS,Linux / Windows / macOS
+Symbol Node,バージョン 1.0.0 以降
+インターネット接続,常時接続（Symbolノードと通信）
 
 🔮 ロードマップ
 
