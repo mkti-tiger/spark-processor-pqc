@@ -284,6 +284,8 @@ https://x.com/kicnft/status/2024143209098514681
 
 
 
+---
+
 ## Quantum-Resistant NFT Issuance Protocol (β)
 
 本プロジェクト独自の量子耐性NFT発行プロトコルの詳細設計はこちらです。
