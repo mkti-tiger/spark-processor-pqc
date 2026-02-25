@@ -1,30 +1,24 @@
 ## Quantum-Resistant NFT Issuance Protocol (β)
 
-本プロジェクト独自の量子耐性NFT発行プロトコル（Symbol Multisig + Aggregateフル活用）です。
+本プロジェクト独自の量子耐性NFT発行プロトコルです。
 
-### Symbolの強みをフル活用した設計（4ステップ）
+Symbolブロックチェーンの **Multisig** および **Aggregate Transaction** を最大限活用し、請負人承認を確実に記録すると同時に、最終状態の真正性をオーナーのPQC公開鍵によって保証します。
 
-**ステップ①**　一時的な2-of-2 Multisigアカウントを作成  
-**ステップ②**　MultisigからAggregate Transactionを発行（Mosaic作成＋Merkle圧縮Metadata＋所有権設定）  
-**ステップ③**　請負人がCosignatureで承認  
-**ステップ④**　Multisig解除＋所有権移転（Ed25519標準署名で実行）
+### コア設計（4ステップ）
+1. 一時的 2-of-2 Multisig アカウント作成（請負人承認を強制記録）  
+2. MultisigからAggregate Transactionを発行（Mosaic作成＋Merkle Tree圧縮＋所有権設定）  
+3. 請負人がCosignature（Ed25519）で承認  
+4. Ed25519でMultisig解除＋所有権移転後、最終状態ハッシュに対して **FN-DSA-512** によるPQC署名を1回のみ適用
 
-### 二層構造による量子耐性実現
-- **コンセンサス層**（Symbolネットワーク保証）  
-  Multisig、一時的承認、Aggregate、Cosignature、Ed25519署名
-
-- **量子耐性層**（アプリケーション保証）  
-  FN-DSA-512によるPQC署名（1回のみ）、Merkle Tree圧縮、Metadata格納
-
-**最終的な真正性保証**はオーナーのPQC単一鍵により付与されます（PQC署名はアプリケーション層で検証されます）。  
-Multisig解除および所有権移転はSymbol標準署名（Ed25519）で実行され、その最終状態に対してPQC署名が1回のみ適用されます。
+### 二層構造モデル
+- **コンセンサス層**（ネットワーク保証）：Multisig / Aggregate / Cosignature / Ed25519  
+- **量子耐性層**（アプリケーション保証）：PQC署名（1回のみ） / Merkle Tree圧縮 / Metadata格納
 
 ### 本質的強み
-複数データをマークルツリーで圧縮し、  
-マークルルート集約後にAggregate Transactionを発行。  
-その全体に対しPQC署名を1回のみ適用することで、  
-署名容量と手数料を最小化。  
+複数データをMerkle Treeで圧縮し、Aggregateで原子的に集約した上で、PQC署名を最終状態に対して**1回のみ**適用することで、署名容量と手数料を最小化（O(1)署名モデル）します。  
+これはSymbolのネイティブAggregateおよびMultisigアーキテクチャとの高い親和性によって実現される設計です。
 
-**これがSymbolブロックチェーンの本質的強みである。**
+**詳細仕様**  
+[📄 Quantum-Resistant NFT Issuance Protocol 詳細](./docs/quantum-resistant-protocol.md)
 
-※ PQC署名はコンセンサスレベルでのネットワーク検証ではなく、アプリケーション層での真正性証明となります。将来的なSymbolプロトコル拡張によりネイティブ検証も可能になる予定です。
+※ PQC署名はアプリケーション層での真正性証明となります（コンセンサスレベルでは検証されません）。
