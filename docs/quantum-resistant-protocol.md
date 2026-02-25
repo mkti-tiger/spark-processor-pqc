@@ -6,43 +6,39 @@ Symbolブロックチェーンの**Multisig + Aggregate Transaction**をフル�
 ## コア設計（4ステップ）
 
 ### 1. 一時的2-of-2 Multisigアカウント作成
-- オーナーアドレス＋請負人アドレスの **2-of-2 Multisig** を生成  
+- オーナーアドレス＋請負人アドレスの **2-of-2 Multisig** を生成
 - これにより請負人の承認をブロックチェーン上で強制的に記録
 
 ### 2. MultisigからAggregate Transactionを発行
-- 1回のAggregateで以下を原子的に実行  
-  - Mosaic（NFT）作成（supply=1, divisibility=0）  
-  - Merkle Treeで圧縮したMetadata追加  
-  - Mosaicの所有権をMultisigアカウントに設定  
+- 1回のAggregateで以下を原子的に実行
+  - Mosaic（NFT）作成（supply=1, divisibility=0）
+  - Merkle Treeで圧縮したMetadata追加
+  - Mosaicの所有権をMultisigアカウントに設定
 - PQC署名はまだ使用しない（容量削減のため）
 
 ### 3. 請負人がCosignature（承認）
-- 請負人がウォレットで **Cosign** を実行  
+- 請負人がウォレットで **Cosign** を実行
 - これでAggregateが成立し、Mosaicが正式発行される
 
 ### 4. オーナーのPQC単一鍵でMultisig解除＋所有権移転
-- オーナーの **FN-DSA-512鍵** のみで新しいAggregateを実行  
-  - Multisig解除  
-  - Mosaic所有権をオーナーのPQC単一アドレスへ移転  
+- オーナーの **FN-DSA-512鍵** のみで新しいAggregateを実行
+  - Multisig解除
+  - Mosaic所有権をオーナーのPQC単一アドレスへ移転
   - PQC署名付きMetadataを最終追加（**ここでPQC署名は1回のみ**）
 
 ## Symbolの強みを活かした効果
-- PQC署名容量・手数料を劇的に削減（1回のみ）  
-- 請負人承認をネイティブMultisigで強制記録  
-- 最終コントロールは常にオーナーのPQC単一鍵のみ  
-- Merkle Tree証明による各データの真正性担保  
-- 他チェーンでは実現困難な**ネイティブAggregate + Multisig**の組み合わせ
+- PQC署名容量・手数料を劇的に削減（1回のみ）
+- 請負人承認をネイティブMultisigで強制記録
+- 最終コントロールは常にオーナーのPQC単一鍵のみ
+- Merkle Tree証明による各データの真正性担保
+- ネイティブAggregateとネイティブMultisigを併せ持つアーキテクチャとの高い親和性
 
 ## 現状（β段階）
-- 2026年2月25日現在、設計完了・実装準備中  
+- 2026年2月25日現在、設計完了・実装準備中
 - 本設計は他に類似例のないオリジナルプロトコルです
-
 詳細は随時更新いたします。
 
-
-
 ## Symbolの強みをフル活用した設計（4ステップ）
-
 以下に、**ひとつひとつ丁寧に**、順番に説明いたします。
 
 **ステップ①　一時的な2-of-2 Multisigアカウントを作成する**  
@@ -54,24 +50,23 @@ Symbolブロックチェーンの**Multisig + Aggregate Transaction**をフル�
 **ステップ②　MultisigアカウントからAggregate Transactionを発行する**  
 **何をするか**：Multisigアカウントを使って1回のAggregate Transactionで以下の作業を全部同時に行います。  
 ・Mosaic（NFT）の作成  
-・Markle Treeで圧縮したMetadataの追加（PQC署名はまだ入れません）  
+・Merkle Treeで圧縮したMetadataの追加（PQC署名はまだ入れません）  
 ・Mosaicの所有権をこのMultisigアカウントに設定  
 **なぜ必要か**：Symbolの最大の強みである「Aggregate」を使い、複数の操作を1回の取引で原子的に実行します。これにより手数料と容量を最小に抑えられます。  
-**量子耐性とのつながり**：ここではまだ重いPQC署名は入れません。Markle Treeでデータを圧縮しておくことで、後で署名を1回だけに集約できます。
+**量子耐性とのつながり**：ここではまだ重いPQC署名は入れません。Merkle Treeでデータを圧縮しておくことで、後で署名を1回だけに集約できます。
 
 **ステップ③　請負人がCosignature（Cosign）を行う**  
 **何をするか**：請負人が自分のウォレットで「このAggregateに同意します」というCosignをします。  
 **なぜ必要か**：これが請負人の正式な承認になります。CosignがなければAggregateは成立せず、Mosaicは発行されません。  
-**量子耐性とのつながり**：請負人の署名は従来のECDSA（軽い署名）でOKです。PQC署名はまだ使いませんので、請負人に負担をかけません。  
+**量子耐性とのつながり**：請負人の署名はSymbol標準のEd25519署名で実行されます。PQC署名はまだ使用しませんので、請負人に追加負担はありません。  
 **所要時間**：請負人がボタンを押すだけで完了（数秒）
 
 **ステップ④　成立後、あなたのPQC単一鍵で「Multisig解除＋所有権移転」Aggregateを実行する**  
 **何をするか**：Multisigが成立した直後、あなたが自分のPQC鍵（FN-DSA-512）だけで新しいAggregateを発行します。  
 内容：Multisig解除、Mosaic所有権をあなたのPQC単一アドレスへ移転、PQC署名付きMetadataを最終追加（ここで初めてPQC署名1回だけ使用）  
 **なぜ必要か**：コントロールを完全にあなただけに戻します。請負人の権限は一切残りません。  
-**量子耐性とのつながり**：PQC署名はこのステップで1回だけ発生します。Markle Tree＋Aggregateのおかげで署名サイズが劇的に小さくなり、手数料も最小になります。  
+**量子耐性とのつながり**：PQC署名はこのステップで1回だけ発生します。Merkle Tree＋Aggregateのおかげで署名サイズが劇的に小さくなり、手数料も最小になります。  
 **完了後**：Mosaic（NFT）は完全にあなたのPQC単一鍵だけで管理され、量子耐性が確保されます。
 
 **全体のメリット**  
 SymbolのMultisigとAggregateの両方をフル活用し、PQC署名をたった1回だけに抑えつつ、請負人承認を確実に記録。最終コントロールは常にあなたのPQC単一鍵のみ。これがまさに「Symbolの強み」を最大限に活かした量子耐性設計です。
-
