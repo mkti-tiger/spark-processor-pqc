@@ -33,7 +33,6 @@ SYMBOL請負人は、
 
 
 ---
-
 ## 📋 目次
 - [プロジェクトの本質](#-プロジェクトの本質)
 - [3つの核心的優位性](#-3つの核心的優位性)
@@ -45,7 +44,7 @@ SYMBOL請負人は、
 - [検証・長期耐久性強化](#7-検証長期耐久性強化)
 - [将来の拡張性とエンタープライズ対応](#8-将来の拡張性とエンタープライズ対応)
 - [Symbolのオンチェーンデータ記録のための標準メカニズム](#10-symbolのオンチェーンデータ記録のための標準メカニズム)
-- [Quantum-Resistant NFT Issuance Protocol (β)](## Quantum-Resistant NFT Issuance Protocol (β))
+- [Quantum-Resistant NFT Issuance Protocol (β)](#quantum-resistant-nft-issuance-protocol-β)
 - [クイックスタート](#クイックスタート)
 - [動作要件](#動作要件)
 - [ロードマップ](#ロードマップ)
@@ -64,6 +63,13 @@ SYMBOL請負人は、
 
 3. **Multi-Chain Anchoring（多チェーン対応）**  
    BTC・ETH・JPYCなど複数チェーンのトランザクションを量子耐性でSymbol上に安全にアンカリング。
+
+---
+## Quantum-Resistant NFT Issuance Protocol (β)
+
+本プロジェクト独自の量子耐性NFT発行プロトコル（Symbol Multisig + Aggregateフル活用）を追加実装中です。
+
+[📄 詳細仕様](./docs/quantum-resistant-protocol.md)
 
 ---
 
