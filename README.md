@@ -45,6 +45,7 @@ SYMBOL請負人は、
 - [検証・長期耐久性強化](#7-検証長期耐久性強化)
 - [将来の拡張性とエンタープライズ対応](#8-将来の拡張性とエンタープライズ対応)
 - [Symbolのオンチェーンデータ記録のための標準メカニズム](#10-symbolのオンチェーンデータ記録のための標準メカニズム)
+- [Quantum-Resistant NFT Issuance Protocol (β)](## Quantum-Resistant NFT Issuance Protocol (β))
 - [クイックスタート](#クイックスタート)
 - [動作要件](#動作要件)
 - [ロードマップ](#ロードマップ)
@@ -279,6 +280,20 @@ Timestamp: 2026-02-18 23:48:31
 
 詳細はこちらのXポストをご参照ください：
 https://x.com/kicnft/status/2024143209098514681
+
+
+
+
+## Quantum-Resistant NFT Issuance Protocol (β)
+
+本プロジェクト独自の量子耐性NFT発行プロトコルの詳細設計はこちらです。
+
+[📄 詳細仕様](./docs/quantum-resistant-protocol.md)
+
+
+
+
+
 
 
 
