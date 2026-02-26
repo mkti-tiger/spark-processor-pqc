@@ -5,7 +5,7 @@
 Symbolブロックチェーンの柔軟なプラグイン機能を活用し、  
 **既存のL1（BTC、ETH、JPYC等）を一切改変することなく**、量子耐性（PQC）の保護層を提供する非侵入型アーキテクチャです。
 
-> 📄 **アーキテクチャ詳細・正確な技術仕様 →** [SPEC_beta1.1.0.md](./SPEC_beta1.1.0.md)
+> 📄 **アーキテクチャ詳細仕様は末尾の「技術仕様（β1.1.0）」セクションを参照してください。**
 
 ---
 
@@ -21,7 +21,7 @@ Symbolブロックチェーンの柔軟なプラグイン機能を活用し、
 - [検証・長期耐久性強化](#7-検証長期耐久性強化)
 - [将来の拡張性とエンタープライズ対応](#8-将来の拡張性とエンタープライズ対応)
 - [Symbolのオンチェーンデータ記録](#10-symbolのオンチェーンデータ記録のための標準メカニズム)
-- [Quantum-Resistant NFT Issuance Protocol (β)](#quantum-resistant-nft-issuance-protocol-β)
+- [Quantum-Resistant NFT Issuance Protocol (β1.1.0)](#quantum-resistant-nft-issuance-protocol-β110)
 - [クイックスタート](#クイックスタート)
 - [動作要件](#動作要件)
 - [ロードマップ](#ロードマップ)
@@ -107,7 +107,7 @@ SYMBOL請負人は、
 > ⚠️ **PQC署名はアプリケーション層で検証されます。**  
 > Symbolノードは現行仕様ではEd25519のみをコンセンサスレベルで検証します。  
 > 公証・監査・真正性証明用途では十分に有効です。  
-> 詳細 → [SPEC_beta1.1.0.md](./SPEC_beta1.1.0.md)
+> 詳細は末尾「技術仕様（β1.1.0）」セクションを参照してください。
 
 *Designed by @mkti_tiger | Spark Processor (β1.1.0) on X*
 
@@ -119,7 +119,7 @@ SYMBOL請負人は、
 - **通信方式**：HTTPS + E2E暗号
 - **データ圧縮**：Merkle Rootアンカリングによりデータ量を大幅削減
 
-> 詳細な処理フロー・容量設計・検証モデル → [SPEC_beta1.1.0.md](./SPEC_beta1.1.0.md)
+> 詳細な処理フロー・容量設計・検証モデルは末尾「技術仕様（β1.1.0）」セクションを参照してください。
 
 ---
 
@@ -266,11 +266,11 @@ Timestamp:    2026-02-18 23:48:31
 
 ---
 
-## Quantum-Resistant NFT Issuance Protocol (β)
+## Quantum-Resistant NFT Issuance Protocol (β1.1.0)
 
 本プロジェクト独自の量子耐性NFT発行プロトコルの詳細設計はこちらです。
 
-[📄 詳細仕様](./docs/quantum-resistant-protocol.md)
+[📄 詳細仕様 → NFT_PROTOCOL_beta1.1.0.md](./NFT_PROTOCOL_beta1.1.0.md)
 
 ---
 
@@ -317,7 +317,7 @@ docker logs -f spark-pqc
   ✅ Symbol初のPQCアンカー記録（2026-02-18）
 
 β1.1.0（進行中）
-  ✅ アーキテクチャ正確化・SPEC_beta1.1.0.md公開
+  ✅ アーキテクチャ正確化・技術仕様をREADMEに統合
   ✅ PQC署名層の正確な定義（アプリケーション層）
   ✅ 全図の修正（VPN→E2E・処理順序正規化）
   🔲 検証CLI作成（最優先）
@@ -358,7 +358,7 @@ A. いいえ。公開鍵のみで誰でも即時検証可能です。
 A. いいえ。署名専用鍵のため資産流出リスクはありません。
 
 **Q. PQC署名はSymbolネットワークが自動検証しますか？**  
-A. 現行仕様ではアプリケーション層での検証です。公証・監査・真正性証明用途では十分に有効です。詳細は [SPEC_beta1.1.0.md](./SPEC_beta1.1.0.md) を参照してください。
+A. 現行仕様ではアプリケーション層での検証です。公証・監査・真正性証明用途では十分に有効です。詳細は末尾「技術仕様（β1.1.0）」セクションを参照してください。
 
 ---
 
@@ -568,3 +568,118 @@ Symbolの直接修正を避け、新たなサービスレイヤーを構築し�
 <img width="792" height="1038" alt="JPYC β1.0.0" src="https://github.com/user-attachments/assets/06b2d83b-1568-4bd2-ac26-5b6a18804b39" />
 <img width="726" height="540" alt="image" src="https://github.com/user-attachments/assets/d2f24214-2760-45b1-b161-d7f72edfac36" />
 
+---
+
+## 技術仕様（β1.1.0）
+
+> 本セクションはβ1.0.0で不正確だった技術表現を明確化した正式仕様です。
+
+### β1.0.0からの主要変更点
+
+| 項目 | β1.0.0の表現（不正確） | β1.1.0の正確な表現 |
+|---|---|---|
+| PQC署名の適用層 | 「Aggregate全体に1回PQC署名」（曖昧） | **アプリケーション層**でのオフチェーンPQC署名 |
+| 検証主体 | ネットワーク全体が検証するかのような表現 | **検証ツール・監査アプリ側**で独立検証 |
+| コンセンサス層 | PQC対応済みかのような表現 | **Ed25519固定**（現行Symbolプロトコル仕様） |
+| 通信方式 | VPN | **E2E暗号**（正式反映） |
+| 処理順序 | PQC署名→Merkle Tree（誤り） | **集約→Merkle Tree→Aggregate TX→PQC署名**（正） |
+
+### PQC署名の正確な処理フロー
+
+```
+Step 1: 複数データのハッシュをキューに集約
+Step 2: Merkle Treeで圧縮 → Root取得
+Step 3: Aggregate Transaction を作成
+Step 4: Aggregate TX全体のシリアライズハッシュを取得
+Step 5: そのハッシュに対してPQC署名を1回生成
+        アルゴリズム: FN-DSA-512（Falcon）/ ML-DSA-65（Dilithium）
+        署名サイズ: FN-DSA-512 = 約690バイト
+Step 6: PQC署名をMetadata TransactionまたはPlain Messageに記録
+Step 7: Aggregate全体をEd25519で発行
+        → Symbolネットワークはこの署名のみをコンセンサス検証
+```
+
+### 二層構造の明確な役割分担
+
+| 層 | 保証内容 | 技術 | 検証場所 |
+|---|---|---|---|
+| **コンセンサス層** | 原子性・不変記録・タイムスタンプ | Ed25519 + Aggregate TX | Symbolノード（自動） |
+| **量子耐性層** | 真正性の量子耐性証明 | FN-DSA-512 / ML-DSA-65 + Merkle | 検証ツール・監査アプリ（独立検証） |
+
+### 用途適合性
+
+| 用途 | 適合性 | 理由 |
+|---|---|---|
+| NFT発行・真正性証明 | ✅ 実用的 | アプリ層検証で十分 |
+| 公証・監査対応 | ✅ 実用的 | 不変記録 + 検証ツールで対応可能 |
+| 金融機関向け真正性保証 | ✅ 実用的 | 金融庁報告書の要件に合致 |
+| Symbolネットワーク全体の自動PQC検証 | ⚠️ 将来対応 | プロトコル拡張が必要 |
+
+### 容量・手数料設計
+
+```
+FN-DSA-512 公開鍵:    897 バイト
+FN-DSA-512 署名:      690 バイト
+Merkle Root (SHA3):    32 バイト
+JSONオーバーヘッド:    ~80 バイト
+─────────────────────────────────
+署名のみ記録:         約802 バイト（Plain Message 1,023バイト制限内）
+公開鍵は別Metadataエントリに分離して管理
+```
+
+**コスト比較（概算）**
+
+| 方式 | オンチェーンTX数 | 相対コスト |
+|---|---|---|
+| 個別TX方式（PQC署名なし） | 1 TX / 1件 | 100% |
+| Spark Processor（1000件集約） | 1 TX / 1000件 | **約0.1%** |
+
+### PQC公開鍵の管理仕様
+
+公開鍵はSymbol Metadataとして以下の形式で記録・管理します：
+
+```json
+{
+  "v": 2,
+  "purpose": "pqc-public-key-registry",
+  "algorithm": "FN-DSA-512",
+  "publicKey": "<hex>",
+  "validFrom": "2026-02-26T00:00:00Z",
+  "validUntil": "2026-08-26T00:00:00Z",
+  "keyId": "<sha3-256 of publicKey>"
+}
+```
+
+### 完全検証フロー
+
+```
+1. TX HashからMerkle RootとPQC署名を取得
+2. keyIdからPQC公開鍵レジストリを参照
+3. PQC公開鍵でPQC署名を検証
+4. IPFS / ArweaveからMerkle Proofを取得
+5. Merkle Root + Merkle Proofで個別データの包含を検証
+→ すべて成功 = 量子耐性真正性が証明された状態
+```
+
+### セキュリティ特性
+
+```
+✅ Harvest-now-decrypt-later攻撃への対処
+✅ データ改ざんの事後検出
+✅ 真正性の長期保証（量子コンピュータがEd25519を破っても独立して検証可能）
+
+⚠️ Symbolチェーン自体のEd25519破綻 → チェックポイント・ファイナリティで対応予定
+⚠️ ネットワーク全体の自動PQC検証 → 将来のL1拡張で解決予定
+⚠️ クライアント認証 → β1.2.0で策定予定
+```
+
+### 参考規格
+
+- [NIST FIPS 204 (ML-DSA / Dilithium)](https://csrc.nist.gov/pubs/fips/204/final)
+- [NIST FIPS 206 (FN-DSA / Falcon)](https://csrc.nist.gov/pubs/fips/206/final)
+- [Symbol公式ドキュメント](https://docs.symbol.dev)
+- [金融庁「耐量子計算機暗号への対応に関する検討会報告書」](https://www.fsa.go.jp)
+
+---
+
+*License: CC0 1.0 (パブリックドメイン) | Designed by @mkti_tiger | Spark Processor β1.1.0*
