@@ -378,6 +378,9 @@ A. いいえ。署名専用鍵のため資産流出リスクはありません�
 ## 参考資料
 
 図1 全体フロー（概念）
+
+<img width="1654" height="2339" alt="image" src="https://github.com/user-attachments/assets/950ab7c5-bd6f-476d-a7d3-c1aac31e5813" />
+
 チェーン記録証明
 Transaction Hash: 88E8FB3CC460C49A6681064D6D4519B88B21E32E6BF00E9CC5C5DE8341AD0932
 Timestamp: 2026-02-15 19:55:15
