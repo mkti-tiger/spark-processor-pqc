@@ -1,4 +1,3 @@
-
 # Quantum-Resistant NFT Issuance Protocol (β1.1.0)
 
 **Symbol Blockchain + FN-DSA-512 (Falcon) PQC Layer**  
@@ -16,6 +15,7 @@
 - [コアフロー（4ステップ）](#3-コアフロー4ステップ)
 - [データモデル](#4-データモデルv11改善版)
 - [実装フロー](#5-実装フローsymbol-typescript-sdk例)
+- [5.4 実装上の注意点](#54-実装上の注意点gemini指摘β110追記)
 - [オフチェーン検証仕様](#6-オフチェーン検証仕様リファレンス)
 - [セキュリティ特性と制約](#7-セキュリティ特性と制約)
 - [容量設計](#8-容量設計)
@@ -193,6 +193,53 @@ const signedFinalizeTx = owner.sign(finalizeAggregateTx, networkGenerationHash);
 // announceAggregateComplete で即時確定
 ```
 
+### 5.4 実装上の注意点（Gemini指摘・β1.1.0追記）
+
+**① CBORライブラリは決定論的エンコードを使用すること（必須）**
+
+CBORのキー順序が変わると `stateHash` が不一致になり、検証が必ず失敗します。
+決定論的（Canonical）エンコードが保証されたライブラリを選定してください。
+
+```typescript
+// ✅ 推奨：cbor-x（決定論的エンコード対応）
+import { encodeCanonical } from 'cbor-x';
+const pqcCborPayload = encodeCanonical({
+  v: 2,
+  alg: "FN-DSA-512",
+  keyId: keyId,
+  sig: pqcSignature,
+  stateHash: stateHash,
+});
+
+// ❌ 非推奨：キー順序が不定のライブラリ（stateHash不一致の原因）
+// JSON.stringify() も順序が保証されないため使用禁止
+```
+
+**② Metadata更新権限の管理（必須）**
+
+Step 4完了後、`PQC_ANCHOR_V2` Metadataを上書きされると真正性が破壊されます。
+以下の運用ルールを必ず適用してください。
+
+```
+【推奨運用ルール】
+- PQC_ANCHOR_V2 の更新権限はオーナーのみ
+- 発行完了後は Metadata更新トランザクションを意図的にブロック
+  （運用ポリシーとして明文化・監査ログに記録）
+- より強固にしたい場合：Metadataをイミュータブルなアドレスに紐付け
+  （Symbolのアカウント制限機能を活用）
+```
+
+**③ 公開鍵レジストリの再利用（コスト最適化）**
+
+同一オーナーが2個目以降のNFTを発行する場合、`PQC_PUBKEY_V2` の再記録は不要です。
+`keyId`（SHA3-256 of publicKey）で既存の公開鍵レジストリを参照するだけで済みます。
+
+```
+1枚目のNFT発行: PQC_ANCHOR_V2 + PQC_PUBKEY_V2 を記録（2エントリ）
+2枚目以降:      PQC_ANCHOR_V2 のみ記録（keyIdで既存公開鍵を参照）
+                → 手数料・容量コストを大幅削減
+```
+
 ---
 
 ## 6. オフチェーン検証仕様（リファレンス）
@@ -227,7 +274,8 @@ const signedFinalizeTx = owner.sign(finalizeAggregateTx, networkGenerationHash);
 ### 制約・注意点
 
 - PQC署名の検証は**アプリケーション層**（Symbolノードは自動検証しない）
-- Metadataの上書きリスク → 発行完了後のMetadata更新権限管理が必要
+- **Metadataの上書きリスク** → 発行完了後のMetadata更新権限を運用ポリシーで明示的に制限すること（5.4参照）
+- **CBORエンコードの決定論的保証** → ライブラリ選定を誤ると `stateHash` 不一致が発生（5.4参照）
 - 請負人がオフラインの場合のフォールバック設計は別途必要
 
 ---
