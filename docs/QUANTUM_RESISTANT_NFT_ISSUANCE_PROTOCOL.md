@@ -1,3 +1,5 @@
+→最新版 [spec/NFT_PROTOCOL_beta1.1.0.md](./spec/NFT_PROTOCOL_beta1.1.0.md)
+
 # Quantum-Resistant NFT Issuance Protocol (β)
 
 **Symbol Blockchain + FN-DSA-512 (Falcon) PQC Layer**  
