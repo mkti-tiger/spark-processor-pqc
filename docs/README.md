@@ -7,6 +7,6 @@ Symbolブロックチェーンの Multisig および Aggregate Transaction を�
 **詳細仕様**  
 
 最新版
-→ [spec/NFT_PROTOCOL_beta1.1.0.md](./spec/NFT_PROTOCOL_beta1.1.0.md)
+→ [NFT_PROTOCOL_beta1.1.0.md](./NFT_PROTOCOL_beta1.1.0.md)
 
 ※ PQC署名はアプリケーション層での真正性証明となります（コンセンサスレベルでは検証されません）。
