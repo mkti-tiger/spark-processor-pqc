@@ -1,3 +1,5 @@
+> 📄 **Spark Processor全体仕様 →** [README.md](./README.md)
+
 # Quantum-Resistant NFT Issuance Protocol (β)
 
 本プロジェクト独自の量子耐性NFT発行プロトコルです。
