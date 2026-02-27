@@ -19,6 +19,8 @@ Symbolブロックチェーンの **Multisig** および **Aggregate Transaction
 これはSymbolのネイティブAggregateおよびMultisigアーキテクチャとの高い親和性によって実現される設計です。
 
 **詳細仕様**  
-[📄 Quantum-Resistant NFT Issuance Protocol 詳細](./quantum-resistant-protocol.md)
+[📄 NFT_PROTOCOL_beta1.1.0.md
+ 詳細](./NFT_PROTOCOL_beta1.1.0.md
+)
 
 ※ PQC署名はアプリケーション層での真正性証明となります（コンセンサスレベルでは検証されません）。
