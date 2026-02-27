@@ -1,4 +1,4 @@
-→最新版 [spec/NFT_PROTOCOL_beta1.1.0.md](./spec/NFT_PROTOCOL_beta1.1.0.md)
+> 📄 **Spark Processor全体仕様 →** [README.md](./README.md)
 
 # Quantum-Resistant NFT Issuance Protocol (β)
 
